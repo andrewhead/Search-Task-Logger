@@ -60,3 +60,13 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+# Virtual environment
+venv
+
+# Local SQLite databases
+*.sqlite3
+
+# Temporary text files
+.*.swp
+.*.swo
