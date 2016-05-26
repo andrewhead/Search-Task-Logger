@@ -10,10 +10,7 @@ TEMPLATE_DEBUG = False
 ALLOWED_HOSTS = ['.searchlogger.tutorons.com']
 
 # Read in the Postgres database configuration from a file
-DATABASE_CONFIG_FILENAME = os.path.join(
-    os.path.abspath(os.sep),  # root directory
-    'etc', 'django', 'searchlogger', 'database_config.json'
-)
+DATABASE_CONFIG_FILENAME = os.path.join(BASE_DIR, 'database_config.json')
 with open(DATABASE_CONFIG_FILENAME) as database_config_file:
     database_config = json.load(databse_config_file)
 
