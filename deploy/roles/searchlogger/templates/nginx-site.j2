@@ -3,8 +3,14 @@ upstream {{ appname }}_server {
 }
  
 server {
-    listen 80;
+
+    # Only listen for HTTPS requests.
+    # The incoming data is sensitive and needs to be encrypted.
+    listen 443 ssl;
+
     server_name {{ domain }} www.{{ domain }};
+    ssl_certificate /etc/nginx/ssl/nginx.crt;
+    ssl_certificate_key /etc/nginx/ssl/nginx.key;
 
     keepalive_timeout 5;
  
@@ -23,4 +29,5 @@ server {
             break;
         }
     }
+
 }

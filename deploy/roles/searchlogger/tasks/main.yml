@@ -82,6 +82,22 @@
   become: true
   tags: nginx
 
+# Process for configuring SSL for Nginx are adapted from the instructions at DigitalOcean
+# https://www.digitalocean.com/community/tutorials/how-to-create-an-ssl-certificate-on-nginx-for-ubuntu-14-04
+- name: Create directory for SSL certificates
+  file: state=directory path=/etc/nginx/ssl
+  become: true
+  tags: nginx
+
+- name: Fetch SSL certificate
+  s3: bucket={{ privatebucket }} object={{ item }} dest=/etc/nginx/ssl/{{ item }} mode=get
+      aws_access_key={{ aws_access_key_id }} aws_secret_key={{ aws_secret_access_key }}
+  with_items:
+  - nginx.crt
+  - nginx.key
+  become: true
+  tags: nginx
+
 - name: Create directory for Django secret keys
   file: state=directory path=/etc/django/{{ appname }}
   become: true
