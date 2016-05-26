@@ -12,7 +12,7 @@ ALLOWED_HOSTS = ['.searchlogger.tutorons.com']
 # Read in the Postgres database configuration from a file
 DATABASE_CONFIG_FILENAME = os.path.join(BASE_DIR, 'database_config.json')
 with open(DATABASE_CONFIG_FILENAME) as database_config_file:
-    database_config = json.load(databse_config_file)
+    database_config = json.load(database_config_file)
 
 DATABASES = {
     'default': {
