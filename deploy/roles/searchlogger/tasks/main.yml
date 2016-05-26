@@ -1,0 +1,143 @@
+---
+- name: Install server software
+  apt: name={{ item }} update_cache=yes
+  with_items:
+  - git
+  - python-pip
+  - python-boto
+  - python-dev
+  - supervisor
+  - nginx
+  tags: serverpkgs
+  become: true
+
+- name: Install application dependencies
+  apt: name={{ item }} update_cache=yes
+  with_items: apppkgs
+  when: apppkgs is defined
+  tags: apppkgs
+  become: true
+
+- name: Create group for administering application
+  group: name={{ groupname }}
+  tags: users
+  become: true
+
+- name: Add users to admin group
+  user: name={{ item }} groups={{ groupname }} append=yes
+  with_items: "{{ group_users }}"
+  tags: users
+  become: true
+
+- name: Create project directory
+  file: state=directory path={{ projectdir }} owner={{ ansible_ssh_user }} group={{ groupname }}
+  become: true
+
+- name: Create data directory
+  file: state=directory path={{ code_data }} owner={{ ansible_ssh_user }} group={{ groupname }}
+  become: true
+
+- name: Create log directory
+  file: state=directory path={{ logdir }} owner={{ ansible_ssh_user }} group={{ groupname }}
+  become: true
+
+- name: Install virtualenv
+  pip: name=virtualenv
+  become: true
+
+- name: Transfer Python dependencies list
+  copy: src={{ appname }}-reqs.txt dest={{ projectdir }}
+  tags: pythonpkgs
+
+- name: Install server Python dependencies
+  pip: requirements={{ projectdir }}/{{ appname }}-reqs.txt virtualenv={{ venv }}
+  tags: pythonpkgs
+
+- name: Checkout source code
+  git: repo={{ repo }} dest={{ src }} force=yes recursive=yes
+  tags: updatecode
+
+- name: Assign source code permissions to full group
+  file: state=directory path={{ src }} group={{ groupname }} recurse=yes
+  tags: updatecode
+
+- name: Fetch PostgreSQL configuration
+  s3: bucket={{ privatebucket }} object={{ postgres_config }} dest={{ django_dir }}/{{ postgres_config }} mode=get
+      aws_access_key={{ aws_access_key_id }} aws_secret_key={{ aws_secret_access_key }}
+
+- name: Install gunicorn
+  pip: name=gunicorn virtualenv="{{ venv }}"
+
+- name: Remove default nginx user
+  lineinfile: dest=/etc/nginx/nginx.conf line="user www-data;" state=absent
+  tags: nginx
+
+- name: Add nginx user
+  lineinfile: dest=/etc/nginx/nginx.conf line="user ubuntu ubuntu;"
+  become: true
+  tags: nginx
+
+- name: Configure nginx main site
+  template: src=nginx-site.j2 dest=/etc/nginx/sites-enabled/{{ appname }}
+  become: true
+  tags: nginx
+
+- name: Create directory for Django secret keys
+  file: state=directory path=/etc/django/{{ appname }}
+  become: true
+
+- name: Fetch Django app secret key
+  s3: bucket={{ privatebucket }} object=secret.key dest=/etc/django/{{ appname }}/secret.key mode=get
+      aws_access_key={{ aws_access_key_id }} aws_secret_key={{ aws_secret_access_key }}
+  tags: appkey
+  become: true
+
+- name: Sync database models with the Django code
+  django_manage: >
+    command=migrate
+    app_path={{ django_dir }}
+    virtualenv={{ venv }}
+    settings={{ django_settings }}
+  tags: updatecode
+
+- name: Update static files
+  django_manage: >
+    command=collectstatic
+    app_path={{ django_dir }}
+    virtualenv={{ venv }}
+    settings={{ django_settings }}
+  tags:
+  - updatecode
+  - staticfiles
+
+- name: Copy app to supervisor
+  template: src=supervisor.j2 dest=/etc/supervisor/conf.d/{{ appname }}.conf
+  become: true
+  tags: supervisor
+
+- name: Stop application
+  supervisorctl: name={{ appname }} state={{ item }}
+  with_items:
+  - present
+  - stopped
+  tags:
+  - updatecode
+  - supervisor
+  become: true
+
+- name: Cleanup after last application run
+  file: dest=/tmp/{{ appname }}.pid state=absent
+  tags:
+  - updatecode
+  - supervisor
+
+- name: Start application
+  supervisorctl: name={{ appname }} state=started
+  tags:
+  - updatecode
+  - supervisor
+  become: true
+
+- name: Restart nginx
+  service: name=nginx state=restarted
+  tags: nginx
