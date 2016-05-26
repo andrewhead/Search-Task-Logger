@@ -25,3 +25,7 @@ class LocationEventResource(ModelResource):
         authentication = ApiKeyAuthentication()
         detail_allowed_methods = []
         list_allowed_methods = ['post']
+
+    def hydrate(self, bundle):
+        bundle.obj.user = bundle.request.user
+        return bundle
