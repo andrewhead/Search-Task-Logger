@@ -19,13 +19,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'q44*w=!8f_@0d8g%4rpdxfs29#d*foog#h@l=s35odotrbm@f+'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+# Load the secret key from a file
+SECRET_KEY_FILENAME = os.path.join(
+    os.path.abspath(os.sep),  # root directory
+    'etc', 'django', 'searchlogger', 'secret.key'
+)
+with open(SECRET_KEY_FILENAME) as secret_key_file:
+    SECRET_KEY = secret_key_file.read()
 
 
 # Application definition
@@ -71,17 +71,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'searchlogger.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 
 
 # Password validation
