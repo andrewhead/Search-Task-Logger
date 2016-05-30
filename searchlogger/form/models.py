@@ -33,7 +33,7 @@ class Prequestionnaire(models.Model):
     )
     python_proficiency = models.CharField(
         verbose_name="How would you describe your proficiency with Python?",
-        choices=verbatim_choices(["Novice", "Proficient", "Expett"]),
+        choices=verbatim_choices(["Novice", "Proficient", "Expert"]),
         max_length=100
     )
     occupation = models.CharField(
@@ -51,7 +51,9 @@ class Prequestionnaire(models.Model):
     )
     gender = models.CharField(
         verbose_name="Gender?",
-        max_length=500
+        max_length=500,
+        blank=True,
+        null=True
     )
 
 
@@ -184,5 +186,19 @@ class Postquestionnaire(models.Model):
             "documentation for these packages change over the course of answering " +
             "these questions?"
         ),
-        max_length=10000
+        max_length=10000,
+        blank=True,
+        null=True
+    )
+
+
+class PackagePair(models.Model):
+    user = models.ForeignKey(User)
+    package1 = models.CharField(
+        verbose_name="What is the first package you will be learning about?",
+        max_length=1000
+    )
+    package2 = models.CharField(
+        verbose_name="What is the second one?",
+        max_length=1000
     )

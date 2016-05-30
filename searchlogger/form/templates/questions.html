@@ -9,7 +9,7 @@ $(function() {
   addHeaderBefore('label[for^=id_likert_confidence]:first', "Confidence");
   addHeaderBefore('label[for=id_extra_information]', "Additional information");
   markLikert('ul#id_likert_confidence', "Not confident", "Confident");
-  markLikert('ul#id_likert_comparison', "Package 1", "Package 2");
+  markLikert('ul#id_likert_comparison', "{{ package1 }}", "{{ package2 }}");
 });
 </script>
 {% endblock %}

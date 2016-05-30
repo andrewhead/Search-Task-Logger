@@ -6,8 +6,10 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 
-from .models import Question, Prequestionnaire, PackageComparison, Postquestionnaire, QuestionEvent
-from .forms import QuestionForm, PrequestionnaireForm, PackageComparisonForm, PostquestionnaireForm
+from .models import Question, Prequestionnaire, PackageComparison, PackagePair, \
+    Postquestionnaire, QuestionEvent
+from .forms import QuestionForm, PrequestionnaireForm, PackagePairForm, \
+    PackageComparisonForm, PostquestionnaireForm
 
 
 CONCERNS = [
@@ -33,6 +35,8 @@ def question(request, question_index):
 
     question_index = int(question_index)
     concern = get_concern(request.user, question_index)
+
+    package_pair = PackagePair.objects.get(user=request.user)
 
     # Either get this question from and existing response,
     # or initialize a new question
@@ -94,7 +98,9 @@ def question(request, question_index):
 
     return render(request, 'questions.html', {
         'form': form,
-        'question_index': question_index
+        'question_index': question_index,
+        'package1': package_pair.package1,
+        'package2': package_pair.package2,
     })
 
 
@@ -137,15 +143,36 @@ def prequestionnaire(request):
     })
 
 
+@login_required
 def pretask(request):
 
-    if request.method == 'POST':
-        if request.POST.get('previous') is not None:
-            return HttpResponseRedirect(reverse('prequestionnaire'))
-        else:
-            return HttpResponseRedirect(reverse('precomparison'))
+    try:
+        package_pair = PackagePair.objects.get(user=request.user)
+    except PackagePair.DoesNotExist:
+        package_pair = PackagePair(user=request.user)
 
-    return render(request, 'pretask.html', {})
+    if request.method == 'POST':
+        form = PackagePairForm(
+            request.POST,
+            instance=package_pair,
+            label_suffix='',
+        )
+        if form.is_valid():
+            form.save()
+            if request.POST.get('previous') is not None:
+                return HttpResponseRedirect(reverse('prequestionnaire'))
+            else:
+                return HttpResponseRedirect(reverse('precomparison'))
+
+    else:
+        form = PackagePairForm(
+            instance=package_pair,
+            label_suffix='',
+        )
+
+    return render(request, 'pretask.html', {
+        'form': form
+    })
 
 
 @login_required
@@ -155,6 +182,8 @@ def precomparison(request):
         precomparison = PackageComparison.objects.get(user=request.user, stage='before')
     except PackageComparison.DoesNotExist:
         precomparison = PackageComparison(user=request.user, stage='before')
+
+    package_pair = PackagePair.objects.get(user=request.user)
 
     if request.method == 'POST':
         form = PackageComparisonForm(
@@ -177,6 +206,8 @@ def precomparison(request):
 
     return render(request, 'precomparison.html', {
         'form': form,
+        'package1': package_pair.package1,
+        'package2': package_pair.package2,
     })
 
 
@@ -192,6 +223,8 @@ def postcomparison(request):
         postquestionnaire = Postquestionnaire.objects.get(user=request.user)
     except Postquestionnaire.DoesNotExist:
         postquestionnaire = Postquestionnaire(user=request.user)
+
+    package_pair = PackagePair.objects.get(user=request.user)
 
     if request.method == 'POST':
 
@@ -227,6 +260,8 @@ def postcomparison(request):
     return render(request, 'postcomparison.html', {
         'comparison_form': comparison_form,
         'feedback_form': questionnaire_form,
+        'package1': package_pair.package1,
+        'package2': package_pair.package2,
     })
 
 

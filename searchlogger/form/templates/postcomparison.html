@@ -3,8 +3,8 @@
 <title>Comparison</title>
 <script>
 $(function() {
-  markLikert('ul#id_likert_community', "Package 1", "Package 2");
-  markLikert('ul#id_likert_documentation', "Package 1", "Package 2");
+  markLikert('ul#id_likert_community', "{{ package1 }}", "{{ package2 }}");
+  markLikert('ul#id_likert_documentation', "{{ package1 }}", "{{ package2 }}");
 });
 </script>
 {% endblock %}

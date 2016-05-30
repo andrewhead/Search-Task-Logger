@@ -22,10 +22,12 @@ function markLikert(selector, start, end) {
         {% endblock %}
     </head>
     <body>
+        {% if request.user.is_authenticated %}
         <form action="{% url 'logout' %}" method=GET>
             <input type=submit name=logout value="Log out" />
         </form>
         <hr/>
+        {% endif %}
         {% block content %}
         {% endblock content %}
     </body>

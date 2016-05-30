@@ -9,6 +9,7 @@
 body {
   width: 80%;
   margin: auto;
+  padding-top: 2em;
   padding-bottom: 4em;
   background-color: #e0dbe8;
 }
@@ -50,7 +51,7 @@ input, textarea, select {
   border: none;
 }
 
-input[type=text], textarea, select {
+input[type=text], input[type=password], textarea, select {
   padding: .5em;
   width: 100%;
 }
@@ -68,7 +69,7 @@ input[name=next] {
   float: right;
 }
 
-input[name=logout] {
+input[name=logout], input[value=login] {
   width: 100%;
 }
 

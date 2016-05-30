@@ -1,28 +1,24 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
 <!--This login page is from the Django tutorial:
 https://docs.djangoproject.com/en/1.9/topics/auth/default/#django.contrib.auth.decorators.login_required-->
-<html>
-    <head>
-    <meta charset="utf-8" />
-        <title>Base</title>
-    </head>
-    <body>
+{% block head %}
+<title>Base</title>
+{% endblock %}
+{% block content %}
 {% if form.errors %}
 <p>Your username and password didn't match.  Please try again.</p>
 {% endif %}
 
-{% if next %}
-    {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page.  To proceed,
-    please login with an account that has access.</p>
-    {% else %}
-    <p>Please login to see this page.</p>
-    {% endif %}
-{% endif %}
-
 <form method="post" action="{% url 'login' %}">
 {% csrf_token %}
-<table>
+<table style="margin: auto;">
+{% if next %}
+<tr>
+    <td colspan=2>
+        <p>Please login to see this page.</p>
+    </td>
+</tr>
+{% endif %}
 <tr>
     <td>{{ form.username.label_tag }}</td>
     <td>{{ form.username }}</td>
@@ -31,11 +27,17 @@ https://docs.djangoproject.com/en/1.9/topics/auth/default/#django.contrib.auth.d
     <td>{{ form.password.label_tag }}</td>
     <td>{{ form.password }}</td>
 </tr>
+<tr>
+    <td colspan=2>
+        <input type="submit" value="login" />
+        {% if next %}
+        <input type="hidden" name="next" value="{{ next }}" />
+        {% else %}
+        <input type="hidden" name="next" value="{% url 'welcome' %}" />
+        {% endif %}
+    </td>
+</tr>
 </table>
 
-<input type="submit" value="login" />
-<input type="hidden" name="next" value="{{ next }}" />
 </form>
-
-    </body>
-</html>
+{% endblock %}

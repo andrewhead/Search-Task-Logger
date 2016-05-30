@@ -7,7 +7,7 @@ from django import forms
 from django.forms import modelform_factory, Textarea, RadioSelect
 from django.utils.safestring import mark_safe
 
-from .models import Question, Prequestionnaire, PackageComparison, Postquestionnaire
+from .models import Question, Prequestionnaire, PackagePair, PackageComparison, Postquestionnaire
 
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -79,4 +79,10 @@ PostquestionnaireForm = modelform_factory(
     widgets={
         'change_justification': Textarea(),
     }
+)
+
+
+PackagePairForm = modelform_factory(
+    PackagePair,
+    exclude=['user']
 )

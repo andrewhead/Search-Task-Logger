@@ -8,6 +8,7 @@ from .views import welcome, prequestionnaire, pretask, precomparison,\
 
 
 urlpatterns = [
+    url(r'^$', welcome),
     url(r'^welcome/', welcome, name='welcome'),
     url(r'^prequestionnaire/', prequestionnaire, name='prequestionnaire'),
     url(r'^pretask/', pretask, name='pretask'),
