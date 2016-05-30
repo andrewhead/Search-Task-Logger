@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Introductory Task</title>
+{% endblock %}
+
+{% block content %}
+<h2>Introductory Task</h2>
+<form action="{% url 'pretask' %}" method="post">
+    <p>Pretend you have just found out about this package and are trying to decide whether or not to use it. Take three minutes to inspect the online support and documentation for the package. You can finish early if you want.</p>
+    {% csrf_token %}
+    {{ form }}
+    <div>
+        <input type="submit" name="previous" value="Previous" />
+        <input type="submit" name="next" value="Next" />
+    </div>
+</form>
+{% endblock %}

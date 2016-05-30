@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block head %}
+<title>Prequestionnaire</title>
+{% endblock %}
+{% block content %}
+<h2>Prequestionnaire</h2>
+<form action="{% url 'prequestionnaire' %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <div>
+        <input type="submit" name="previous" value="Previous" />
+        <input type="submit" name="next" value="Next" />
+    </div>
+</form>
+{% endblock %}

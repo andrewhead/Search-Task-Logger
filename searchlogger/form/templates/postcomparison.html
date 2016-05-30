@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block head %}
+<title>Comparison</title>
+<script>
+$(function() {
+  markLikert('ul#id_likert_community', "Package 1", "Package 2");
+  markLikert('ul#id_likert_documentation', "Package 1", "Package 2");
+});
+</script>
+{% endblock %}
+{% block content %}
+<h2>Compare the packages</h2>
+<p>Now that you have spent some time answering these specific questions, please revisit the comparisons from earlier.</p>
+<form action="{% url 'postcomparison' %}" method="post">
+    {% csrf_token %}
+    {{ comparison_form }}
+    {{ feedback_form }}
+    <div>
+        <input type="submit" name="previous" value="Previous" />
+        <input type="submit" name="next" value="Next" />
+    </div>
+</form>
+{% endblock content %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block head %}
+<title>Question {{ question_index }}</title>
+<script>
+$(function() {
+  addHeaderBefore('label[for=id_concern]', "Main question");
+  addHeaderBefore('label[for=id_strategy]', "Strategy");
+  addHeaderBefore('label[for=id_url1]', "Proof");
+  addHeaderBefore('label[for^=id_likert_confidence]:first', "Confidence");
+  addHeaderBefore('label[for=id_extra_information]', "Additional information");
+  markLikert('ul#id_likert_confidence', "Not confident", "Confident");
+  markLikert('ul#id_likert_comparison', "Package 1", "Package 2");
+});
+</script>
+{% endblock %}
+{% block content %}
+<form action="{% url 'question' question_index %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <div>
+        <input type="submit" name="previous" value="Previous" />
+        <input type="submit" name="next" value="Next" />
+    </div>
+</form>
+{% endblock %}

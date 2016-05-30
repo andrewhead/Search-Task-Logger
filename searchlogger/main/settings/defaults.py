@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tastypie',
+    'main',
     'searchlogger',
+    'form',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -52,7 +54,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'searchlogger.urls'
+ROOT_URLCONF = 'main.urls'
 
 TEMPLATES = [
     {
@@ -70,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'searchlogger.wsgi.application'
+WSGI_APPLICATION = 'main.wsgi.application'
 
 
 # Password validation

@@ -1,0 +1,126 @@
+* {
+  font-family: Arial;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 4px;
+}
+
+body {
+  width: 80%;
+  margin: auto;
+  padding-bottom: 4em;
+  background-color: #e0dbe8;
+}
+
+h2 {
+  padding: .5em;
+  margin-bottom: 0;
+  margin-top: 2em;
+  background-color: white;
+  font-weight: bold;
+  border-bottom: 2px #5e35ad solid;
+}
+
+form > label {
+  padding: .5em;
+  margin-top: 1.5em;
+  width: 100%;
+  display: block;
+  font-size: medium;
+  font-weight: 500;
+  background-color: white;
+  border-bottom: 1px #5e35ad solid;
+}
+
+p, p.question {
+  padding: .5em;
+  margin-top: 0em;
+  background-color: white;
+  font-size: small;
+}
+
+input, textarea, select {
+  margin-top: 0em;
+  font-size: small;
+  background-color: white;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  border: none;
+}
+
+input[type=text], textarea, select {
+  padding: .5em;
+  width: 100%;
+}
+
+input[type=submit] {
+  margin-top: 2em;
+  width: 49.5%;
+}
+
+input[name=previous] {
+  float: left;
+}
+
+input[name=next] {
+  float: right;
+}
+
+input[name=logout] {
+  width: 100%;
+}
+
+textarea {
+  height: 4em;
+}
+
+span.helptext {
+  margin-top: .5em;
+  display: block;
+  font-size: small;
+}
+
+span.helptext:before {
+  content: 'Help: '
+}
+
+ul[id^='id_likert_'] {
+  margin-top: 1em;
+  list-style: none;
+  padding-left: 0;
+  text-align: center;
+}
+
+ul[id^='id_likert_'] li {
+  display: inline;
+  margin-top: .5em;
+}
+
+ul[id^='id_likert_'] li label {
+  font-size: 0;
+}
+
+ul[id^='id_likert_'] li p {
+  display: inline;
+  font-size: small;
+  font-weight: bold;
+  margin: 0;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+input[type=radio] {
+  margin-left: .5em;
+  margin-right: .5em;
+}
+
+ul.errorlist {
+  margin: 1px;
+  padding: .5em;
+  color: red;
+  font-size: small;
+  list-style: none;
+  background-color: white;
+}
