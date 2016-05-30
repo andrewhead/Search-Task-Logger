@@ -1,4 +1,4 @@
 [program:{{ appname }}]
-command={{ venv }}/bin/gunicorn {{ appname }}.wsgi --bind 127.0.0.1:{{ localport }} --pid /tmp/gunicorn-{{ appname }}.pid
+command={{ venv }}/bin/gunicorn main.wsgi --bind 127.0.0.1:{{ localport }} --pid /tmp/gunicorn-{{ appname }}.pid
 directory={{ django_dir }}
 environment=DJANGO_SETTINGS_MODULE="{{ django_settings }}"

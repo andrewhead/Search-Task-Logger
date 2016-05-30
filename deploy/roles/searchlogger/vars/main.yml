@@ -1,1 +1,1 @@
-django_settings: "{{ appname }}.settings.production"
+django_settings: "main.settings.production"
