@@ -8,6 +8,7 @@
 <h2>Welcome to the study!</h2>
 <form action="{% url 'welcome' %}" method="post">
     <p>In this study, we ask you to predict the quality of online support for software packages.  You will inspect existing documentation, social media communication, or any information you find relevant on the web.</p>
+    <p>Your intent should be to determine if the community and documentation for this package will suit your needs during the time that you use the package.</p>
     <p>You will do a number of tasks.  For each task, you will look for information on the web to answer questions about how good you think the support will be.</p>
     {% csrf_token %}
     {{ form }}

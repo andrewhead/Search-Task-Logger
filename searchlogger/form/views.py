@@ -6,20 +6,11 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 
-from .models import Question, Prequestionnaire, PackageComparison, PackagePair, \
+from .models import Strategy, Question, Prequestionnaire, PackageComparison, PackagePair, \
     Postquestionnaire, QuestionEvent
-from .forms import QuestionForm, PrequestionnaireForm, PackagePairForm, \
+from .forms import StrategyForm, QuestionForm, PrequestionnaireForm, PackagePairForm, \
     PackageComparisonForm, PostquestionnaireForm
-
-
-CONCERNS = [
-    "You will be able to find How-To documentation for more tasks you want to do.",
-    "The documentation (e.g., API docs and example code) will reflect the most recent code.",
-    "Developers will be able to answer the questions you ask as fast as you need answers to them.",
-    "The community will be welcoming when responding to questions that you ask.",
-    "The developers that write documentation produce trustworthy documentation and example code.",
-    "The typical users of this package share a common technical background with you.",
-]
+from .concerns import CONCERNS
 
 
 # This single function is going to handle the assignment
@@ -28,6 +19,70 @@ def get_concern(user, concern_index):
     offset = user.id % len(CONCERNS)  # for counterbalancing
     adjusted_concern_index = (offset + concern_index) % len(CONCERNS)
     return CONCERNS[adjusted_concern_index]
+
+
+def save_event(user, question_index, event_type):
+    QuestionEvent.objects.create(
+        user=user,
+        question_index=question_index,
+        event_type=event_type
+    )
+
+
+@login_required
+def strategy(request, question_index):
+
+    question_index = int(question_index)
+    concern = get_concern(request.user, question_index)
+
+    # Either get this question from and existing response,
+    # or initialize a new question
+    try:
+        strategy = Strategy.objects.get(
+            user=request.user,
+            question_index=question_index,
+        )
+    except Strategy.DoesNotExist:
+        strategy = Strategy(
+            user=request.user,
+            question_index=question_index,
+        )
+
+    # In case some small things have changed in the concern's wording,
+    # only add it after the question has been retrieved
+    strategy.concern = concern
+
+    # If the user posted, then save the responses and redirect them
+    # to the next post (or send them to the previous one).
+    if request.method == 'POST':
+        save_event(request.user, question_index, 'post strategy')
+        form = StrategyForm(
+            request.POST,
+            instance=strategy,
+            label_suffix='',
+        )
+        if form.is_valid():
+            form.save()
+            next_index = question_index if request.POST.get('next') \
+                else question_index - 1
+            if next_index == 0:
+                return HttpResponseRedirect(reverse('precomparison'))
+            elif next_index > 0:
+                return HttpResponseRedirect(reverse('question', args=(next_index,),))
+
+    # If the user is fetching a post, then just send it to them
+    else:
+        save_event(request.user, question_index, 'get_strategy')
+        form = StrategyForm(
+            instance=strategy,
+            label_suffix='',
+        )
+
+    return render(request, 'strategy.html', {
+        'form': form,
+        'question_index': question_index,
+        'concern': concern,
+    })
 
 
 @login_required
@@ -58,45 +113,30 @@ def question(request, question_index):
     # If the user posted, then save the responses and redirect them
     # to the next post (or send them to the previous one).
     if request.method == 'POST':
-        QuestionEvent.objects.create(
-            user=request.user,
-            question_index=question_index,
-            event_type="post"
-        )
+        save_event(request.user, question_index, 'post responses')
         form = QuestionForm(
             request.POST,
             instance=question,
             label_suffix='',
         )
         if form.is_valid():
-            QuestionEvent.objects.create(
-                user=request.user,
-                question_index=question_index,
-                event_type="saved"
-            )
             form.save()
             next_index = question_index + 1 if request.POST.get('next') \
-                else question_index - 1
+                else question_index
             if next_index > len(CONCERNS):
                 return HttpResponseRedirect(reverse('postcomparison'))
-            elif next_index == 0:
-                return HttpResponseRedirect(reverse('precomparison'))
             elif next_index > 0:
-                return HttpResponseRedirect(reverse('question', args=(next_index,),))
+                return HttpResponseRedirect(reverse('strategy', args=(next_index,),))
 
     # If the user is fetching a post, then just send it to them
     else:
-        QuestionEvent.objects.create(
-            user=request.user,
-            question_index=question_index,
-            event_type="get"
-        )
+        save_event(request.user, question_index, 'get responses')
         form = QuestionForm(
             instance=question,
             label_suffix='',
         )
 
-    return render(request, 'questions.html', {
+    return render(request, 'question.html', {
         'form': form,
         'question_index': question_index,
         'package1': package_pair.package1,
@@ -196,7 +236,7 @@ def precomparison(request):
             if request.POST.get('previous') is not None:
                 return HttpResponseRedirect(reverse('pretask'))
             else:
-                return HttpResponseRedirect(reverse('question', args=(1,),))
+                return HttpResponseRedirect(reverse('strategy', args=(1,),))
 
     else:
         form = PackageComparisonForm(

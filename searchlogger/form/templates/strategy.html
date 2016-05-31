@@ -1,16 +1,13 @@
 {% extends "base.html" %}
 {% block head %}
-<title>Comparison</title>
+<title>Question {{ question_index }}</title>
 <script>
 $(function() {
-  markLikert('ul#id_likert_quality', "{{ package1 }}", "{{ package2 }}");
-  markLikert('ul#id_likert_preference', "{{ package1 }}", "{{ package2 }}");
 });
 </script>
 {% endblock %}
 {% block content %}
-<h2>Compare the Packages</h2>
-<form action="{% url 'precomparison' %}" method="post">
+<form action="{% url 'strategy' question_index %}" method="post">
     {% csrf_token %}
     {{ form }}
     <div>
@@ -18,4 +15,4 @@ $(function() {
         <input type="submit" name="next" value="Next" />
     </div>
 </form>
-{% endblock content %}
+{% endblock %}

@@ -7,6 +7,7 @@
 }
 
 body {
+  max-width: 720px;
   width: 80%;
   margin: auto;
   padding-top: 2em;
@@ -25,7 +26,7 @@ h2 {
 
 form > label {
   padding: .5em;
-  margin-top: 1.5em;
+  margin-top: 2.5em;
   width: 100%;
   display: block;
   font-size: medium;
@@ -34,11 +35,19 @@ form > label {
   border-bottom: 1px #5e35ad solid;
 }
 
+label[for='id_concern'] {
+  font-size: large;
+}
+
+p.question {
+  font-weight: bold;
+}
+
 p, p.question {
   padding: .5em;
   margin-top: 0em;
   background-color: white;
-  font-size: small;
+  font-size: normal;
 }
 
 input, textarea, select {
@@ -49,6 +58,10 @@ input, textarea, select {
   -moz-box-shadow: none;
   box-shadow: none;
   border: none;
+}
+
+select {
+  font-size: medium;
 }
 
 input[type=text], input[type=password], textarea, select {
@@ -74,7 +87,7 @@ input[name=logout], input[value=login] {
 }
 
 textarea {
-  height: 4em;
+  height: 5em;
 }
 
 span.helptext {
@@ -88,10 +101,13 @@ span.helptext:before {
 }
 
 ul[id^='id_likert_'] {
-  margin-top: 1em;
+  /* margin-top: 1em; */
+  margin: 0;
+  padding: 1em;
   list-style: none;
   padding-left: 0;
   text-align: center;
+  background-color: white;
 }
 
 ul[id^='id_likert_'] li {

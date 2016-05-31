@@ -7,7 +7,8 @@ from django import forms
 from django.forms import modelform_factory, Textarea, RadioSelect
 from django.utils.safestring import mark_safe
 
-from .models import Question, Prequestionnaire, PackagePair, PackageComparison, Postquestionnaire
+from .models import Strategy, Question, Prequestionnaire, PackagePair,\
+    PackageComparison, Postquestionnaire
 
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -36,23 +37,34 @@ class PlainTextWidget(forms.Widget):
         return result
 
 
-QuestionForm = modelform_factory(
-    Question,
-    exclude=['user', 'question_index', 'created', 'updated'],
+StrategyForm = modelform_factory(
+    Strategy,
+    fields=[
+        'concern',
+        'strategy',
+    ],
     widgets={
         'concern': PlainTextWidget('p', 'question'),
         'strategy': Textarea(),
-        'scratch_work': Textarea(),
-        'likert_comparison': RadioSelect(),
-        'likert_confidence': RadioSelect(),
-        'url1_where': Textarea(),
-        'url1_what': Textarea(),
-        'url1_why': Textarea(),
-        'url2_where': Textarea(),
-        'url2_what': Textarea(),
-        'url2_why': Textarea(),
-        'extra_information': Textarea(),
-        'comments': Textarea(),
+    }
+)
+
+
+QuestionForm = modelform_factory(
+    Question,
+    fields=[
+        'concern',
+        'likert_comparison_intuition',
+        'likert_comparison_evidence',
+        'evidence',
+        'likert_coverage',
+    ],
+    widgets={
+        'concern': PlainTextWidget('p', 'question'),
+        'likert_comparison_evidence': RadioSelect(),
+        'evidence': Textarea(),
+        'likert_comparison_intuition': RadioSelect(),
+        'likert_coverage': RadioSelect(),
     }
 )
 
@@ -65,19 +77,26 @@ PrequestionnaireForm = modelform_factory(
 
 PackageComparisonForm = modelform_factory(
     PackageComparison,
-    exclude=['user', 'stage'],
+    fields=[
+        'likert_quality',
+        'likert_preference',
+    ],
     widgets={
-        'likert_community': RadioSelect(),
-        'likert_documentation': RadioSelect(),
+        'likert_quality': RadioSelect(),
+        'likert_preference': RadioSelect(),
     }
 )
 
 
 PostquestionnaireForm = modelform_factory(
     Postquestionnaire,
-    exclude=['user'],
+    fields=[
+        'likert_perception_change',
+        'important_concern1',
+        'important_concern2',
+    ],
     widgets={
-        'change_justification': Textarea(),
+        'likert_perception_change': RadioSelect(),
     }
 )
 
