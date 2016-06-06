@@ -1,16 +1,11 @@
 {% extends "base.html" %}
 {% block head %}
-<title>Question {{ question_index }}</title>
+<title>Answer - Question {{ question_index }}</title>
 <script>
 $(function() {
-  // addHeaderBefore('label[for=id_concern]', "Main question");
-  // addHeaderBefore('label[for=id_strategy]', "Strategy");
-  // addHeaderBefore('label[for=id_url1]', "Proof");
-  // addHeaderBefore('label[for^=id_likert_confidence]:first', "Confidence");
-  // addHeaderBefore('label[for=id_extra_information]', "Additional information");
   markLikert('ul#id_likert_comparison_evidence', "{{ package1 }}", "{{ package2 }}");
-  markLikert('ul#id_likert_comparison_intuition', "{{ package1 }}", "{{ package2 }}");
-  markLikert('ul#id_likert_coverage', "Disagree", "Agree");
+  // markLikert('ul#id_likert_comparison_intuition', "{{ package1 }}", "{{ package2 }}");
+  markLikert('ul#id_likert_confidence', "Not confident", "Confident");
 });
 </script>
 {% endblock %}

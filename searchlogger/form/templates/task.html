@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block head %}
+<title>Start task - Question {{ question_index }}</title>
+{% endblock %}
+{% block content %}
+<form action="{% url 'task' question_index %}" method="post">
+    {% csrf_token %}
+    <h2>Task</h2>
+    <p>Use the web to learn which package better satisfies this concern:</p>
+    <p class='question'>{{ concern }}</p>
+    <p>
+    Let the researcher know when you're ready to start so they can start a timer for this task.
+    They will tell you how much time you have.
+    </p>
+    <p>
+    Once you feel that you have found all the information you want to find, click on the <b>I'm done with this task</b> button.
+    </p>
+    <div>
+        <input type="submit" name="previous" value="Previous" />
+        <input type="submit" name="next" value="I'm done with this task" />
+    </div>
+</form>
+{% endblock %}

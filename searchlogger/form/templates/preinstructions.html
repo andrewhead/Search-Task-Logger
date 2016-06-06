@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Introductory Task</title>
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'preinstructions' %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <h2>Instructions</h2>
+    <p>
+    Pretend you have just found out about these two packages, and
+    are choosing which one to use.
+    <br><br>
+    Now, use the web to answer the question:
+    <b>which package has better support and documentation?</b>
+    You will have a few minutes for each package.
+    The researcher will give you a countdown timer for each one.
+    Tell the researcher when you are ready to continue.
+    </p>
+    <div>
+        <input type="submit" name="previous" value="Previous" />
+        <input type="submit" name="next" value="Next" />
+    </div>
+</form>
+{% endblock %}

@@ -5,14 +5,22 @@
 {% endblock %}
 
 {% block content %}
-<h2>Introductory Task</h2>
 <form action="{% url 'pretask' %}" method="post">
-    <p>Pretend you have just found out about this package and are trying to decide whether or not to use it. Take three minutes to inspect the online support and documentation for the package. You can finish early if you want.</p>
     {% csrf_token %}
-    {{ form }}
+    <h2>Go!</h2>
+    <p><i>Reminder: </i>Use the web to answer the question,
+    <b>Which package has better support and documentation?</b>
+    </p>
+    <p>
+    The two packages you are comparing are {{ package1 }} and {{ package2 }}.
+    Start with {{ package1 }}, and the researcher will let you know when to move on to {{ package2 }}.
+    </p>
+    <p>
+    If you feel you have found all the information you want to find for a package, let the researcher know and you can move on.
+    </p>
     <div>
         <input type="submit" name="previous" value="Previous" />
-        <input type="submit" name="next" value="Next" />
+        <input type="submit" name="next" value="I'm done with this task" />
     </div>
 </form>
 {% endblock %}

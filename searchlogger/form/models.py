@@ -21,22 +21,30 @@ class Prequestionnaire(models.Model):
     programming_years = models.IntegerField(
         verbose_name="How many years of experience do you have programming?",
         choices=choice_range(0, 25),
+        blank=True,
+        null=True,
     )
     python_years = models.IntegerField(
         verbose_name=(
             "How many years of experience do you have programming " +
             "with Python or Python packages?"),
         choices=choice_range(0, 25),
+        blank=True,
+        null=True,
     )
     programming_profiency = models.CharField(
         verbose_name="How would you describe your proficiency as a programmer?",
         choices=verbatim_choices(["Novice", "Proficient", "Expert"]),
-        max_length=100
+        max_length=100,
+        blank=True,
+        null=True,
     )
     python_proficiency = models.CharField(
         verbose_name="How would you describe your proficiency with Python?",
         choices=verbatim_choices(["Novice", "Proficient", "Expert"]),
-        max_length=100
+        max_length=100,
+        blank=True,
+        null=True,
     )
     occupation = models.CharField(
         verbose_name="What is your job?",
@@ -49,7 +57,9 @@ class Prequestionnaire(models.Model):
             "Systems administrator",
             "Other",
         ]),
-        max_length=200
+        max_length=200,
+        blank=True,
+        null=True,
     )
     gender = models.CharField(
         verbose_name="Gender?",
@@ -72,9 +82,7 @@ class Strategy(models.Model):
         verbose_name=(
             "What strategy will you use to find out which package " +
             "is better for this concern?"),
-        help_text=(
-            "Please answer in 1 or 2 sentences.  Feel free to take a minute " +
-            "to think about a strategy."),
+        help_text="Share 1-2 sentences.  This shouldn't take you more than 2 minutes.",
         max_length=10000
     )
 
@@ -88,30 +96,41 @@ class Question(models.Model):
         verbose_name="For this concern, which package is better?",
         max_length=1000
     )
+    likert_comparison_evidence = models.IntegerField(
+        verbose_name=(
+            "Based on the evidence you have seen, which package " +
+            "is better for this concern?"
+        ),
+        choices=choice_range(0, 5),
+        null=True,
+        blank=True,
+    )
+    na_likert_comparison_evidence = models.BooleanField(
+        verbose_name="Can't tell",
+        default=False,
+    )
+    evidence = models.CharField(
+        verbose_name="What evidence informs your rating?",
+        help_text=(
+            "Share 1-2 sentences with links if possible.  " +
+            "This shouldn't take you more than 2 minutes."
+        ),
+        max_length=10000,
+        null=True,
+        blank=True
+    )
+    likert_confidence = models.IntegerField(
+        verbose_name="How confident are you in your assessment of which is better?",
+        choices=choice_range(0, 5),
+        null=True,
+        blank=True,
+    )
+
+    # Deprecated fields (maintained so we don't delete data from database)
     likert_comparison = models.IntegerField(
         verbose_name="For this concern, which package is better?",
         choices=choice_range(0, 5),
         default=-1  # this is to avoid showing bogus option
-    )
-    likert_confidence = models.IntegerField(
-        verbose_name="How confident are you?",
-        choices=choice_range(0, 5),
-        default=-1  # this is to avoid showing bogus option
-    )
-    likert_comparison_evidence = models.IntegerField(
-        verbose_name=(
-            "Based only on the evidence you have seen, which package " +
-            "is better for this concern?"
-        ),
-        choices=choice_range(0, 5),
-        default=-1  # this is to avoid showing bogus option
-    )
-    evidence = models.CharField(
-        verbose_name="What evidence informs your rating?",
-        help_text="Refer to specific pages and content from the web.",
-        max_length=10000,
-        null=True,
-        blank=True
     )
     likert_comparison_intuition = models.IntegerField(
         verbose_name=(
@@ -223,6 +242,7 @@ class PackageComparison(models.Model):
         choices=choice_range(0, 5),
         default=-1,
     )
+    # Deprecated fields (maintained so we don't delete data from database)
     likert_community = models.IntegerField(
         verbose_name="Which package has a better community?",
         choices=choice_range(0, 5),
@@ -235,8 +255,48 @@ class PackageComparison(models.Model):
     )
 
 
+class ConcernRankField(models.CharField):
+
+    def __init__(self, *args, **kwargs):
+        kwargs['choices'] = verbatim_choices(CONCERNS)
+        kwargs['max_length'] = 1000
+        kwargs['blank'] = True
+        kwargs['null'] = True
+        super(self.__class__, self).__init__(*args, **kwargs)
+
+
 class Postquestionnaire(models.Model):
     user = models.ForeignKey(User)
+    concern_rank1 = ConcernRankField(
+        verbose_name=(
+            "Rank these concerns from most to least important when choosing a package.  " +
+            "Order them from top (most important) to bottom (least important)."
+        )
+    )
+    concern_rank2 = ConcernRankField()
+    concern_rank3 = ConcernRankField()
+    concern_rank4 = ConcernRankField()
+    concern_rank5 = ConcernRankField()
+    concern_rank6 = ConcernRankField()
+    likert_perception_change = models.IntegerField(
+        verbose_name=(
+            "My perception of the quality of support and documentation for the packages " +
+            "has changed since the first comparison I made."
+        ),
+        choices=choice_range(0, 5),
+        default=-1,
+    )
+    # Deprecated fields (maintained so we don't delete data from database)
+    change_justification = models.CharField(
+        verbose_name=(
+            "If you agree, how did your perception of the support and " +
+            "documentation for these packages change over the course of answering " +
+            "these questions?"
+        ),
+        max_length=10000,
+        blank=True,
+        null=True
+    )
     important_concern1 = models.CharField(
         verbose_name="To me, the most important question from this set when choosing a package is:",
         choices=verbatim_choices(CONCERNS),
@@ -250,24 +310,6 @@ class Postquestionnaire(models.Model):
         max_length=1000,
         blank=True,
         null=True,
-    )
-    likert_perception_change = models.IntegerField(
-        verbose_name=(
-            "My perception of the support and documentation for these packages changed " +
-            "over the course of answering these questions."
-        ),
-        choices=choice_range(0, 5),
-        default=-1,
-    )
-    change_justification = models.CharField(
-        verbose_name=(
-            "If you agree, how did your perception of the support and " +
-            "documentation for these packages change over the course of answering " +
-            "these questions?"
-        ),
-        max_length=10000,
-        blank=True,
-        null=True
     )
 
 

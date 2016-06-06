@@ -68,11 +68,14 @@ def strategy(request, question_index):
             if next_index == 0:
                 return HttpResponseRedirect(reverse('precomparison'))
             elif next_index > 0:
-                return HttpResponseRedirect(reverse('question', args=(next_index,),))
+                if request.POST.get('next'):
+                    return HttpResponseRedirect(reverse('task', args=(next_index,),))
+                elif request.POST.get('previous'):
+                    return HttpResponseRedirect(reverse('question', args=(next_index,),))
 
     # If the user is fetching a post, then just send it to them
     else:
-        save_event(request.user, question_index, 'get_strategy')
+        save_event(request.user, question_index, 'get strategy')
         form = StrategyForm(
             instance=strategy,
             label_suffix='',
@@ -80,6 +83,29 @@ def strategy(request, question_index):
 
     return render(request, 'strategy.html', {
         'form': form,
+        'question_index': question_index,
+        'concern': concern,
+    })
+
+
+@login_required
+def task(request, question_index):
+
+    question_index = int(question_index)
+    concern = get_concern(request.user, question_index)
+
+    # If the user posted, then save the responses and redirect them
+    # to the next post (or send them to the previous one).
+    if request.method == 'POST':
+        save_event(request.user, question_index, 'post task')
+        if request.POST.get('next'):
+            return HttpResponseRedirect(reverse('question', args=(question_index,),))
+        elif request.POST.get('previous'):
+            return HttpResponseRedirect(reverse('strategy', args=(question_index,),))
+    else:
+        save_event(request.user, question_index, 'get task')
+
+    return render(request, 'task.html', {
         'question_index': question_index,
         'concern': concern,
     })
@@ -126,7 +152,10 @@ def question(request, question_index):
             if next_index > len(CONCERNS):
                 return HttpResponseRedirect(reverse('postcomparison'))
             elif next_index > 0:
-                return HttpResponseRedirect(reverse('strategy', args=(next_index,),))
+                if request.POST.get('previous'):
+                    return HttpResponseRedirect(reverse('task', args=(next_index,),))
+                elif request.POST.get('next'):
+                    return HttpResponseRedirect(reverse('strategy', args=(next_index,),))
 
     # If the user is fetching a post, then just send it to them
     else:
@@ -170,7 +199,7 @@ def prequestionnaire(request):
         )
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('pretask'))
+            return HttpResponseRedirect(reverse('preinstructions'))
 
     else:
         form = PrequestionnaireForm(
@@ -184,7 +213,7 @@ def prequestionnaire(request):
 
 
 @login_required
-def pretask(request):
+def preinstructions(request):
 
     try:
         package_pair = PackagePair.objects.get(user=request.user)
@@ -202,7 +231,7 @@ def pretask(request):
             if request.POST.get('previous') is not None:
                 return HttpResponseRedirect(reverse('prequestionnaire'))
             else:
-                return HttpResponseRedirect(reverse('precomparison'))
+                return HttpResponseRedirect(reverse('pretask'))
 
     else:
         form = PackagePairForm(
@@ -210,8 +239,25 @@ def pretask(request):
             label_suffix='',
         )
 
-    return render(request, 'pretask.html', {
+    return render(request, 'preinstructions.html', {
         'form': form
+    })
+
+
+@login_required
+def pretask(request):
+
+    package_pair = PackagePair.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        if request.POST.get('previous') is not None:
+            return HttpResponseRedirect(reverse('preinstructions'))
+        elif request.POST.get('next') is not None:
+            return HttpResponseRedirect(reverse('precomparison'))
+
+    return render(request, 'pretask.html', {
+        'package1': package_pair.package1,
+        'package2': package_pair.package2,
     })
 
 

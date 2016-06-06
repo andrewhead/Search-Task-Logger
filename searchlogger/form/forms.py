@@ -54,17 +54,16 @@ QuestionForm = modelform_factory(
     Question,
     fields=[
         'concern',
-        'likert_comparison_intuition',
         'likert_comparison_evidence',
+        'na_likert_comparison_evidence',
         'evidence',
-        'likert_coverage',
+        'likert_confidence',
     ],
     widgets={
         'concern': PlainTextWidget('p', 'question'),
         'likert_comparison_evidence': RadioSelect(),
         'evidence': Textarea(),
-        'likert_comparison_intuition': RadioSelect(),
-        'likert_coverage': RadioSelect(),
+        'likert_confidence': RadioSelect(),
     }
 )
 
@@ -92,8 +91,12 @@ PostquestionnaireForm = modelform_factory(
     Postquestionnaire,
     fields=[
         'likert_perception_change',
-        'important_concern1',
-        'important_concern2',
+        'concern_rank1',
+        'concern_rank2',
+        'concern_rank3',
+        'concern_rank4',
+        'concern_rank5',
+        'concern_rank6',
     ],
     widgets={
         'likert_perception_change': RadioSelect(),

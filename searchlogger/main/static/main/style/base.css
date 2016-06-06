@@ -39,6 +39,11 @@ label[for='id_concern'] {
   font-size: large;
 }
 
+/* Hide labels for concern rank questions after the first. */
+label[for^=id_concern_rank] ~ label[for^=id_concern_rank] {
+  display: none;
+}
+
 p.question {
   font-weight: bold;
 }
@@ -48,6 +53,15 @@ p, p.question {
   margin-top: 0em;
   background-color: white;
   font-size: normal;
+}
+
+span.li {
+  display: list-item;
+  margin-left: 1em;
+}
+
+br {
+  line-height: 70%;
 }
 
 input, textarea, select {
@@ -84,6 +98,24 @@ input[name=next] {
 
 input[name=logout], input[value=login] {
   width: 100%;
+}
+
+/* Show "N/A" buttons right next to their input */
+label[for^=id_na_likert_] {
+  margin-top: 0;
+  margin-right: 1em;
+  text-align: center;
+  font-size: small;
+  border-bottom: none;
+  display: inline;
+}
+
+div.na_checkbox {
+  background-color: white;
+  width: 100%;
+  display: block;
+  text-align: center;
+  padding-bottom: .5em;
 }
 
 textarea {
@@ -131,6 +163,10 @@ ul[id^='id_likert_'] li p {
 input[type=radio] {
   margin-left: .5em;
   margin-right: .5em;
+}
+
+input[type=radio][value=''] {
+  display: none;
 }
 
 ul.errorlist {
