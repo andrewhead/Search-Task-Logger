@@ -265,7 +265,7 @@ class PackageComparison(models.Model):
 class ConcernRankField(models.CharField):
 
     def __init__(self, *args, **kwargs):
-        kwargs['choices'] = verbatim_choices(CONCERNS)
+        kwargs['choices'] = verbatim_choices([concern['statement'] for concern in CONCERNS])
         kwargs['max_length'] = 1000
         kwargs['blank'] = True
         kwargs['null'] = True

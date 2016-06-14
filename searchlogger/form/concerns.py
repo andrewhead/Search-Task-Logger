@@ -1,11 +1,26 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-CONCERNS = [
-    "I will be able to find How-To documentation for all the tasks I want to do.",
-    "Developers will provide answers to questions I ask as fast as I need them to.",
-    "The documentation (e.g., API docs and example code) will reflect the most recent code.",
-    "The community will be welcoming when they respond to questions I ask.",
-    "I can trust the developers of the package to develop reliable, usable software.",
-    "The package was designed for users with my conceptual knowledge and goals.",
-]
+CONCERNS = [{
+    'statement': "I will find good How-To documentation for all the tasks I want to do.",
+    'question': "which package will have better How-To documentation " +
+                "for all the tasks you will want to do?",
+}, {
+    'statement': "Developers will provide answers to questions I ask as fast as I need them to.",
+    'question': "for which package are developers more likely to answer questions " +
+                "you ask as fast as you need them to?",
+}, {
+    'statement': "The documentation will be up-to-date with the code.",
+    'question': "which package's documentation will be more up-to-date with the code?",
+}, {
+    'statement': "The community will be welcoming when they respond to questions I ask.",
+    'question': "which community will be more welcoming when responding to questions you ask?",
+}, {
+    'statement': "I can trust the developers of the package to make reliable, usable software.",
+    'question': "which package's developers can you better trust to make " +
+                "reliable, usable software?",
+}, {
+    'statement': "The package was designed for users with my conceptual knowledge and goals.",
+    'question': "which package was better designed for users with your " +
+                "conceptual knowledge and goals?",
+}]

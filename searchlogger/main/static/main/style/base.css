@@ -24,9 +24,10 @@ h2 {
   border-bottom: 2px #5e35ad solid;
 }
 
-form > label {
+form > label, p.question {
   padding: .5em;
   margin-top: 2.5em;
+  margin-bottom: 0;
   width: 100%;
   display: block;
   font-size: medium;
@@ -39,16 +40,20 @@ label[for='id_concern'] {
   font-size: large;
 }
 
+label[for='id_concern'], label[for='id_likert_comparison_evidence_0'] {
+  display: none;
+}
+
+label[for='id_strategy'] {
+  margin-top: 1em;
+}
+
 /* Hide labels for concern rank questions after the first. */
 label[for^=id_concern_rank] ~ label[for^=id_concern_rank] {
   display: none;
 }
 
-p.question {
-  font-weight: bold;
-}
-
-p, p.question {
+p {
   padding: .5em;
   margin-top: 0em;
   background-color: white;

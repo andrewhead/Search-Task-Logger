@@ -9,6 +9,10 @@ $(function() {
 {% block content %}
 <form action="{% url 'strategy' question_index %}" method="post">
     {% csrf_token %}
+    <p>
+    In the next task, you will use the web to answer this question:<br>
+    <b>{{ concern|capfirst }}</b>
+    </p>
     {{ form }}
     <div>
         <input type="submit" name="previous" value="Previous" />

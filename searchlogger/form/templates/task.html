@@ -6,8 +6,10 @@
 <form action="{% url 'task' question_index %}" method="post">
     {% csrf_token %}
     <h2>Task</h2>
-    <p>Use the web to learn which package better satisfies this concern:</p>
-    <p class='question'>{{ concern }}</p>
+    <p>
+    Use the web to answer this question:<br>
+    <b>{{ concern|capfirst }}</b>
+    </p>
     <p>
     Let the researcher know when you're ready to start so they can start a timer for this task.
     They will tell you how much time you have.

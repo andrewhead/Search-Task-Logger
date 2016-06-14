@@ -18,7 +18,7 @@ from .concerns import CONCERNS
 def get_concern(user, concern_index):
     offset = user.id % len(CONCERNS)  # for counterbalancing
     adjusted_concern_index = (offset + concern_index) % len(CONCERNS)
-    return CONCERNS[adjusted_concern_index]
+    return CONCERNS[adjusted_concern_index]['question']
 
 
 def save_event(user, question_index, event_type):
@@ -134,7 +134,7 @@ def question(request, question_index):
 
     # In case some small things have changed in the concern's wording,
     # only add it after the question has been retrieved
-    question.concern = concern
+    question.concern = "Based on the evidence you have seen, " + concern
 
     # If the user posted, then save the responses and redirect them
     # to the next post (or send them to the previous one).

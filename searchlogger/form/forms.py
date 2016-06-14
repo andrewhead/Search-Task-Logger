@@ -40,11 +40,9 @@ class PlainTextWidget(forms.Widget):
 StrategyForm = modelform_factory(
     Strategy,
     fields=[
-        'concern',
         'strategy',
     ],
     widgets={
-        'concern': PlainTextWidget('p', 'question'),
         'strategy': Textarea(),
     }
 )
