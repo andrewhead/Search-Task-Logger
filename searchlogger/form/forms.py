@@ -19,6 +19,7 @@ logging.basicConfig(level=logging.INFO, format="%(message)s")
 # This makes it possible to define additional markup as part
 # of the model, which is totally bad practice, but makes it
 # a lot more adaptable to generate HTML
+# Assumption: the value to be shown does not include double-quotation marks.
 class PlainTextWidget(forms.Widget):
 
     def __init__(self, tag, _class=None, *args, **kwargs):
@@ -33,7 +34,7 @@ class PlainTextWidget(forms.Widget):
         result += '>'
         result += mark_safe(value) if not None else '-'
         result += ('</' + self.tag + '>')
-        result += "<input type=hidden name='" + _name + "' value='" + value + "'/>"
+        result += "<input type=hidden name='" + _name + "' value=\"" + value + "\"/>"
         return result
 
 
