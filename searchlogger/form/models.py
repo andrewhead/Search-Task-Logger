@@ -87,6 +87,14 @@ class Strategy(models.Model):
     )
 
 
+class NotApplicableField(models.BooleanField):
+
+    def __init__(self, *args, **kwargs):
+        kwargs['verbose_name'] = "Don't know"
+        kwargs['default'] = False
+        super(self.__class__, self).__init__(*args, **kwargs)
+
+
 class Question(models.Model):
     user = models.ForeignKey(User)
     question_index = models.IntegerField()
@@ -105,10 +113,7 @@ class Question(models.Model):
         null=True,
         blank=True,
     )
-    na_likert_comparison_evidence = models.BooleanField(
-        verbose_name="Can't tell",
-        default=False,
-    )
+    na_likert_comparison_evidence = NotApplicableField()
     evidence = models.CharField(
         verbose_name="What evidence informs your rating?",
         help_text=(
@@ -125,7 +130,7 @@ class Question(models.Model):
         null=True,
         blank=True,
     )
-
+    na_likert_confidence = NotApplicableField()
     # Deprecated fields (maintained so we don't delete data from database)
     likert_comparison = models.IntegerField(
         verbose_name="For this concern, which package is better?",
@@ -237,11 +242,13 @@ class PackageComparison(models.Model):
         choices=choice_range(0, 5),
         default=-1,
     )
+    na_likert_quality = NotApplicableField()
     likert_preference = models.IntegerField(
         verbose_name="Which package would you rather use?",
         choices=choice_range(0, 5),
         default=-1,
     )
+    na_likert_preference = NotApplicableField()
     # Deprecated fields (maintained so we don't delete data from database)
     likert_community = models.IntegerField(
         verbose_name="Which package has a better community?",
@@ -286,6 +293,7 @@ class Postquestionnaire(models.Model):
         choices=choice_range(0, 5),
         default=-1,
     )
+    na_likert_perception_change = NotApplicableField()
     # Deprecated fields (maintained so we don't delete data from database)
     change_justification = models.CharField(
         verbose_name=(

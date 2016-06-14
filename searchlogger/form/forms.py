@@ -58,6 +58,7 @@ QuestionForm = modelform_factory(
         'na_likert_comparison_evidence',
         'evidence',
         'likert_confidence',
+        'na_likert_confidence',
     ],
     widgets={
         'concern': PlainTextWidget('p', 'question'),
@@ -78,7 +79,9 @@ PackageComparisonForm = modelform_factory(
     PackageComparison,
     fields=[
         'likert_quality',
+        'na_likert_quality',
         'likert_preference',
+        'na_likert_preference',
     ],
     widgets={
         'likert_quality': RadioSelect(),
@@ -91,6 +94,7 @@ PostquestionnaireForm = modelform_factory(
     Postquestionnaire,
     fields=[
         'likert_perception_change',
+        'na_likert_perception_change',
         'concern_rank1',
         'concern_rank2',
         'concern_rank3',

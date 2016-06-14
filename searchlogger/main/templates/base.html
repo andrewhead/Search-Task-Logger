@@ -11,36 +11,40 @@ function addHeaderBefore(selector, text) {
 }
 
 function markLikert(selector, start, end) {
+
   $(selector).prepend(
     "<li><p class='likert_range'>" + start + "</p></li>"
   ).append(
     "<li><p class='likert_range'>" + end + "</p></li>"
   );
-}
 
-$(function() {
-
-  // Wrap all checkboxes and their labels in a container that can be formatted.
-  $('input[type=checkbox][id^=id_na_likert_], label[for^=id_na_likert_]')
-    .wrapAll('<div class=na_checkbox></div>');
+  // Wrap all N/A checkboxes in a list item to be added to the choices. 
+  var list = $(selector);
+  var inputName = list.attr('id').replace(/id_likert_/, '');
+  var checkbox = $('input[type=checkbox][id^=id_na_likert_' + inputName + ']');
+  var label = $('label[for^=id_na_likert_' + inputName + ']');
+  var listItem = $('<li></li>')
+    .append([checkbox, label]);
+  list.append(listItem);
 
   // Whenever an 'N/A' checkbox is selected, it should deselect anything that was selected
   // on the Likert scale.  Any choice on the Likert scale should de-select the N/A checkbox.
-  $('input[type=checkbox][id^=id_na_likert_]')
-    .change(function() {
-      if ($(this).is(':checked')) {
-        var radioId = 'input[value=""][name=' + $(this).attr('id').replace(/id_na_/, '') + ']';
-        $(radioId).prop('checked', true);
-      }
-    });
-  $('input[type=radio][name^=likert_]').change(function() {
+  checkbox.change(function() {
+    if ($(this).is(':checked')) {
+      var radioId = 'input[value=""][name=' + $(this).attr('id').replace(/id_na_/, '') + ']';
+      $(radioId).prop('checked', true);
+    }
+  });
+  $('input[type=radio][name=likert_' + inputName + ']').change(function() {
     if ($(this).val() !== '') {
       var checkboxId = 'input[type=checkbox][id=id_na_' + $(this).attr('name') + ']';
-      console.log(checkboxId);
       $(checkboxId).prop('checked', false);
     }
   });
 
+}
+
+$(function() {
 });
 </script>
         {% block head %}

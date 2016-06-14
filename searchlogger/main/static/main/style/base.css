@@ -103,11 +103,15 @@ input[name=logout], input[value=login] {
 /* Show "N/A" buttons right next to their input */
 label[for^=id_na_likert_] {
   margin-top: 0;
-  margin-right: 1em;
+  margin-left: 1em;
   text-align: center;
   font-size: small;
   border-bottom: none;
   display: inline;
+}
+
+input[id^=id_na_likert] {
+  margin-left: 1em;
 }
 
 div.na_checkbox {
@@ -147,7 +151,7 @@ ul[id^='id_likert_'] li {
   margin-top: .5em;
 }
 
-ul[id^='id_likert_'] li label {
+ul[id^='id_likert_'] li label[for^='id_likert_'] {
   font-size: 0;
 }
 
