@@ -250,10 +250,13 @@ def pretask(request):
     package_pair = PackagePair.objects.get(user=request.user)
 
     if request.method == 'POST':
+        save_event(request.user, 0, 'post task')
         if request.POST.get('previous') is not None:
             return HttpResponseRedirect(reverse('preinstructions'))
         elif request.POST.get('next') is not None:
             return HttpResponseRedirect(reverse('precomparison'))
+    else:
+        save_event(request.user, 0, 'get task')
 
     return render(request, 'pretask.html', {
         'package1': package_pair.package1,
