@@ -63,13 +63,14 @@
 
 - name: Fetch PostgreSQL configuration
   s3: bucket={{ privatebucket }} object={{ postgres_config }} dest={{ django_dir }}/{{ postgres_config }} mode=get
-      aws_access_key={{ aws_access_key_id }} aws_secret_key={{ aws_secret_access_key }}
+      aws_access_key={{ aws_access_key_id }} aws_secret_key={{ aws_secret_access_key }} region=us-west-2
 
 - name: Install gunicorn
   pip: name=gunicorn virtualenv="{{ venv }}"
 
 - name: Remove default nginx user
   lineinfile: dest=/etc/nginx/nginx.conf line="user www-data;" state=absent
+  become: true
   tags: nginx
 
 - name: Add nginx user
@@ -91,7 +92,7 @@
 
 - name: Fetch SSL certificate
   s3: bucket={{ privatebucket }} object={{ item }} dest=/etc/nginx/ssl/{{ item }} mode=get
-      aws_access_key={{ aws_access_key_id }} aws_secret_key={{ aws_secret_access_key }}
+      aws_access_key={{ aws_access_key_id }} aws_secret_key={{ aws_secret_access_key }} region=us-west-2
   with_items:
   - nginx.crt
   - nginx.key
@@ -104,7 +105,7 @@
 
 - name: Fetch Django app secret key
   s3: bucket={{ privatebucket }} object=secret.key dest=/etc/django/{{ appname }}/secret.key mode=get
-      aws_access_key={{ aws_access_key_id }} aws_secret_key={{ aws_secret_access_key }}
+      aws_access_key={{ aws_access_key_id }} aws_secret_key={{ aws_secret_access_key }} region=us-west-2
   tags: appkey
   become: true
 
@@ -114,7 +115,9 @@
     app_path={{ django_dir }}
     virtualenv={{ venv }}
     settings={{ django_settings }}
-  tags: updatecode
+  tags:
+  - updatecode
+  - migrate
 
 - name: Update static files
   django_manage: >

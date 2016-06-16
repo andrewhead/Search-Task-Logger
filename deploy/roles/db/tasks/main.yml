@@ -81,10 +81,13 @@
   postgresql_user: db={{ appname }} name={{ item.username }} password={{ item.password }} port={{ postgres_port }}
   become_user: postgres
   become: true
-  tags: db_setup
+  tags:
+  - db_setup
+  - db_credentials
   with_items:
   - { username: "{{ logger_username }}", password: "{{ logger_password }}" }
   - { username: "{{ reader_username }}", password: "{{ reader_password }}" }
+  no_log: true  # Don't echo these credentials to stdout
 
 - name: Assign logger user privileges
   postgresql_privs: >
