@@ -240,13 +240,15 @@ class PackageComparison(models.Model):
     likert_quality = models.IntegerField(
         verbose_name="Which package has a better community and quality of documentation?",
         choices=choice_range(0, 5),
-        default=-1,
+        null=True,
+        blank=True,
     )
     na_likert_quality = NotApplicableField()
     likert_preference = models.IntegerField(
         verbose_name="Which package would you rather use?",
         choices=choice_range(0, 5),
-        default=-1,
+        null=True,
+        blank=True,
     )
     na_likert_preference = NotApplicableField()
     # Deprecated fields (maintained so we don't delete data from database)
@@ -291,7 +293,8 @@ class Postquestionnaire(models.Model):
             "has changed since the first comparison I made."
         ),
         choices=choice_range(0, 5),
-        default=-1,
+        null=True,
+        blank=True,
     )
     na_likert_perception_change = NotApplicableField()
     # Deprecated fields (maintained so we don't delete data from database)
