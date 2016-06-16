@@ -14,6 +14,7 @@ class LocationEvent(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     visit_date = models.DateTimeField(db_index=True)
     log_date = models.DateTimeField(db_index=True, auto_now_add=True)
+    tab_id = models.CharField(max_length=128, default='null')
     tab_index = models.IntegerField()
     title = models.CharField(max_length=1024)
     url = models.CharField(db_index=True, max_length=2048)
