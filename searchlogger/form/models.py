@@ -47,14 +47,14 @@ class Prequestionnaire(models.Model):
         null=True,
     )
     occupation = models.CharField(
-        verbose_name="What is your job?",
+        verbose_name="What is your primary occupation?",
         choices=verbatim_choices([
             "Software developer",
-            "Graduate student",
-            "Undergraduate student",
+            "Systems administrator",
             "Project manager",
             "Quality assurance",
-            "Systems administrator",
+            "Graduate student",
+            "Undergraduate student",
             "Other",
         ]),
         max_length=200,

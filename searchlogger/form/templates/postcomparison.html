@@ -3,9 +3,42 @@
 <title>Comparison</title>
 <script>
 $(function() {
+
   markLikert('ul#id_likert_quality', "{{ package1 }}", "{{ package2 }}");
   markLikert('ul#id_likert_preference', "{{ package1 }}", "{{ package2 }}");
   markLikert('ul#id_likert_perception_change', "Disagree", "Agree");
+
+  // Randomize the order of options in all drop-downs for ranking concerns.
+  $(function() {
+
+    $('select[name^=concern_rank]').each(function(_, select) {
+
+      // Fisher-Yates shuffle of options
+      // Note that we only perform the shuffle on all non-null options.
+      // No matter how the shuffle is performed, the "------" options should still
+      // appear at the top of the list of options.
+      // Note that with this shuffling, it looks like the original selection is
+      // still preserved even after we re-attach the elements.
+      var options = $(select).children('option:not([value=""])');
+      var swap_index;
+      var random_index;
+      var temp_option;
+      for (swap_index = options.length - 1; swap_index > 0; swap_index--) {
+        random_index = Math.floor(Math.random() * (swap_index + 1));
+        temp_option = options[swap_index];
+        options[swap_index] = options[random_index];
+        options[random_index] = temp_option;
+      }
+
+      // Reattach options to the select element in random order.
+      // Thanks for the tip on the right API calls to do this from:
+      // http://trentrichardson.com/2013/12/16/sort-dom-elements-jquery/
+      options.detach().appendTo(select);
+
+    });
+
+  });
+
 });
 </script>
 {% endblock %}
