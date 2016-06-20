@@ -77,13 +77,16 @@ PrequestionnaireForm = modelform_factory(
 PackageComparisonForm = modelform_factory(
     PackageComparison,
     fields=[
-        'likert_quality',
-        'na_likert_quality',
+        'likert_quality_community',
+        'na_likert_quality_community',
+        'likert_quality_documentation',
+        'na_likert_quality_documentation',
         'likert_preference',
         'na_likert_preference',
     ],
     widgets={
-        'likert_quality': RadioSelect(),
+        'likert_quality_community': RadioSelect(),
+        'likert_quality_documentation': RadioSelect(),
         'likert_preference': RadioSelect(),
     }
 )

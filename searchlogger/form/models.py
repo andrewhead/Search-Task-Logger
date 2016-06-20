@@ -18,17 +18,42 @@ def choice_range(min_, max_):
 
 class Prequestionnaire(models.Model):
     user = models.ForeignKey(User)
-    programming_years = models.IntegerField(
+    programming_years = models.CharField(
         verbose_name="How many years of experience do you have programming?",
-        choices=choice_range(0, 25),
+        choices=verbatim_choices([
+            "Less than one year", "1-2 years", "3-5 years",
+            "6-9 years", "10-19 years", "20 more more years"
+        ]),
+        max_length=100,
         blank=True,
         null=True,
     )
-    python_years = models.IntegerField(
+    python_years = models.CharField(
         verbose_name=(
             "How many years of experience do you have programming " +
             "with Python or Python packages?"),
-        choices=choice_range(0, 25),
+        choices=verbatim_choices([
+            "Less than one year", "1-2 years", "3-5 years",
+            "6-9 years", "10-19 years", "20 more more years"
+        ]),
+        max_length=100,
+        blank=True,
+        null=True,
+    )
+    professional_years = models.CharField(
+        verbose_name="How many years of experience do you have programming professionally?",
+        choices=verbatim_choices([
+            "Less than one year", "1-2 years", "3-5 years",
+            "6-9 years", "10-19 years", "20 more more years"
+        ]),
+        max_length=100,
+        blank=True,
+        null=True,
+    )
+    coding_reason = models.CharField(
+        verbose_name="The main reason I write code is for:...",
+        choices=verbatim_choices(["Work", "Research", "Hobbies", "Coursework"]),
+        max_length=100,
         blank=True,
         null=True,
     )
@@ -61,8 +86,14 @@ class Prequestionnaire(models.Model):
         blank=True,
         null=True,
     )
+    occupation_other = models.CharField(
+        verbose_name="If 'Other', what is your occupation?",
+        max_length=200,
+        blank=True,
+        null=True,
+    )
     gender = models.CharField(
-        verbose_name="Gender?",
+        verbose_name="What is your gender?",
         max_length=500,
         blank=True,
         null=True
@@ -237,13 +268,20 @@ class PackageComparison(models.Model):
         choices=verbatim_choices(["before", "after"]),
         max_length=100
     )
-    likert_quality = models.IntegerField(
-        verbose_name="Which package has a better community and quality of documentation?",
+    likert_quality_community = models.IntegerField(
+        verbose_name="Which package has a better community for clients of the package?",
         choices=choice_range(0, 5),
         null=True,
         blank=True,
     )
-    na_likert_quality = NotApplicableField()
+    na_likert_quality_community = NotApplicableField()
+    likert_quality_documentation = models.IntegerField(
+        verbose_name="Which package has better documentation?",
+        choices=choice_range(0, 5),
+        null=True,
+        blank=True,
+    )
+    na_likert_quality_documentation = NotApplicableField()
     likert_preference = models.IntegerField(
         verbose_name="Which package would you rather use?",
         choices=choice_range(0, 5),

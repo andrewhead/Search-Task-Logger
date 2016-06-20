@@ -83,6 +83,13 @@ select {
   font-size: medium;
 }
 
+option {
+  padding-top: .25em;
+  padding-bottom: .25em;
+  padding-left: .5em;
+  padding-right: .5em;
+}
+
 input[type=text], input[type=password], textarea, select {
   padding: .5em;
   width: 100%;

@@ -8,10 +8,11 @@
 <form action="{% url 'pretask' %}" method="post">
     {% csrf_token %}
     <h2>Go!</h2>
-    <p><i>Reminder: </i>Use the web to answer the question,
-    <b>Which package has better support and documentation?</b>
-    </p>
     <p>
+    <i>Reminder:</i> Use the web to answer these two questions:
+    <span class='li'>Which package has a <b>better community</b> for clients of the package?</span>
+    <span class='li'>Which package has <b>better documentation</b>?</span>
+    <br/>
     The two packages you are comparing are {{ package1 }} and {{ package2 }}.
     Start with {{ package1 }}, and the researcher will let you know when to move on to {{ package2 }}.
     </p>

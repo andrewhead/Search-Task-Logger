@@ -6,8 +6,8 @@ CONCERNS = [{
     'question': "which package will have better How-To documentation " +
                 "for all the tasks you will want to do?",
 }, {
-    'statement': "Developers will provide answers to questions I ask as fast as I need them to.",
-    'question': "for which package are developers more likely to answer questions " +
+    'statement': "Other developers will answer questions I ask as fast as I need them to.",
+    'question': "for which package are other developers more likely to answer questions " +
                 "you ask as fast as you need them to?",
 }, {
     'statement': "The documentation will be up-to-date with the code.",
@@ -20,7 +20,7 @@ CONCERNS = [{
     'question': "which package's developers can you better trust to make " +
                 "reliable, usable software?",
 }, {
-    'statement': "The package was designed for users with my conceptual knowledge and goals.",
+    'statement': "The package was designed for users with my technical knowledge and goals.",
     'question': "which package was better designed for users with your " +
-                "conceptual knowledge and goals?",
+                "technical knowledge and goals?",
 }]

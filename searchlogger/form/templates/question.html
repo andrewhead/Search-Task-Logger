@@ -13,6 +13,10 @@ $(function() {
 <form action="{% url 'question' question_index %}" method="post">
     {% csrf_token %}
     {{ form }}
+    <br/><br/><br/><br/><br/>
+    <p>
+    Continue to the next page when you are done answering the questions on this page.
+    </p>
     <div>
         <input type="submit" name="previous" value="Previous" />
         <input type="submit" name="next" value="Next" />
